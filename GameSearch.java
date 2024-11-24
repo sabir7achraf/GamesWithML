@@ -207,6 +207,7 @@ public abstract class GameSearch {
         while (true) {
             printPosition(startingPosition);
             if (mancalaGame.finDePartie(startingPosition)) {
+                printPosition(startingPosition);
                 break;
             }
 
