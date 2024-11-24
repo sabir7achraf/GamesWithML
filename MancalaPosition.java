@@ -5,7 +5,9 @@ public class MancalaPosition extends Position {
         public int[] board; // Les cases du plateau
         public int playerStore1; // Mancala du joueur 1
         public int playerStore2; // Mancala du joueur 2
-        public boolean currentPlayer; // Joueur en cours (true = joueur humain)
+        public boolean currentPlayer;
+        public boolean extraTurn;
+        // Joueur en cours (true = joueur humain)
 
         public MancalaPosition() {
             // Initialisation classique d'un plateau Mancala
