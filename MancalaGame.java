@@ -330,6 +330,73 @@ public class MancalaGame extends GameSearch {
         }
     }
 
+//    @Override
+//    public Move createMove(boolean player, Position pos) {
+//        MancalaPosition mancalaPosition = (MancalaPosition) pos;
+//        Scanner scanner = new Scanner(System.in);
+//        int pit = -1; // Initialisation avec une valeur invalide
+//
+//        while (true) {
+//            try {
+//                // Affiche la position actuelle avant chaque saisie
+//                System.out.println("\nÉtat actuel du plateau :");
+//                printPosition(pos);
+//
+//                // Demander au joueur de choisir une case ou d'afficher le menu
+//                System.out.print((player ? "Joueur 1" : "Joueur 2")
+//                        + ", choisissez une case (0-5 pour Joueur 1, 6-11 pour Joueur 2, ou 13 pour afficher le menu) : ");
+//                pit = Integer.parseInt(scanner.nextLine()); // Lire l'entrée en tant que chaîne, puis convertir
+//
+//                // Si l'utilisateur entre 13, afficher le menu
+//                if (pit == 13) {
+//                    boolean returnToGame = false; // Indique si le joueur souhaite retourner au jeu
+//
+//                    while (!returnToGame) {
+//                        System.out.println("\nMenu principal :");
+//                        System.out.println("1. Continuer à jouer");
+//                        System.out.println("2. Quitter le jeu");
+//                        System.out.print("Choisissez une option : ");
+//                        int choice = Integer.parseInt(scanner.nextLine());
+//
+//                        if (choice == 1) {
+//                            System.out.println("Retour au jeu...");
+//                            returnToGame = true; // Retourner au jeu
+//                        } else if (choice == 2) {
+//                            System.out.println("Vous avez choisi de quitter le jeu.");
+//                            System.exit(0); // Quitte le programme
+//                        } else {
+//                            System.out.println("Option invalide. Veuillez entrer 1 ou 2.");
+//                        }
+//                    }
+//
+//                    // Après retour au jeu, afficher la position
+//                    System.out.println("\nÉtat actuel du plateau après retour au jeu :");
+//                    printPosition(pos);
+//                    continue; // Retourner à la demande de choix de case après le menu
+//                }
+//
+//                // Valider que le numéro de case est dans les limites autorisées
+//                if ((player && pit >= 0 && pit <= 5) || (!player && pit >= 6 && pit <= 11)) {
+//                    if (mancalaPosition.board[pit] == 0) {
+//                        System.out.println("La case que vous avez choisie est vide, veuillez réessayer !");
+//                    } else {
+//                        break; // Entrée valide
+//                    }
+//                } else {
+//                    System.out.println("Entrée invalide. Veuillez entrer un numéro valide (0-5 pour Joueur 1, 6-11 pour Joueur 2, ou 13 pour le menu).");
+//                }
+//            } catch (NumberFormatException e) {
+//                System.out.println("Entrée invalide. Veuillez entrer un entier valide.");
+//            }
+//        }
+//
+//        // Afficher la position après un choix valide
+//        System.out.println("\nÉtat actuel du plateau après le mouvement :");
+//        printPosition(pos);
+//
+//        return new MancalaMove(pit);
+//    }
+
     @Override
     public Move createMove(boolean player, Position pos) {
         MancalaPosition mancalaPosition = (MancalaPosition) pos;
@@ -360,53 +427,63 @@ public class MancalaGame extends GameSearch {
         MancalaGame game = new MancalaGame();
         Scanner scanner = new Scanner(System.in);
 
-        boolean playerStarts = false;
-        String difficulty = "intermediate"; // Valeur par défaut
+        boolean playerStarts = false; // Définit qui commence dans le mode contre l'ordinateur
+        String difficulty = "intermediate"; // Niveau de difficulté par défaut
 
-        // Choisir qui commence
         while (true) {
-            System.out.println("Entrez 1 pour jouer en mode multijoueur, ou 0 pour jouer avec ordinateur :");
+            System.out.println("Entrez 1 pour jouer en mode multijoueur, ou 0 pour jouer contre l'ordinateur :");
             int choice = scanner.nextInt();
+
             if (choice == 1) {
-             game.playMultiplayerGame(startingPosition, true);
-                break;
-            }
-            if (choice == 0) {
+                // Lancer le mode multijoueur
+                game.playMultiplayerGame(startingPosition, true);
+                break; // Quitter la boucle principale après avoir démarré le jeu
+            } else if (choice == 0) {
+                // Configuration pour le mode contre l'ordinateur
                 System.out.println("Entrez 1 pour que le joueur commence, ou 0 pour que l'ordinateur commence :");
                 int choix = scanner.nextInt();
-                while (true) { //choisir la complixity de l'ordinateur
+
+                if (choix == 1) {
+                    playerStarts = true;
+                } else if (choix == 0) {
+                    playerStarts = false;
+                } else {
+                    System.out.println("Entrée invalide. Veuillez entrer 1 ou 0.");
+                    continue; // Redemander une entrée valide
+                }
+
+                // Choix du niveau de difficulté
+                while (true) {
                     System.out.println("Sélectionnez la complexité de l'ordinateur :");
                     System.out.println("1 - Amateur");
                     System.out.println("2 - Intermédiaire");
                     System.out.println("3 - Expert");
                     int level = scanner.nextInt();
+
                     if (level == 1) {
                         difficulty = "amateur";
-                        break;
+                        break; // Sortir de la boucle de sélection de difficulté
                     } else if (level == 2) {
                         difficulty = "intermediate";
-                        break;
+                        break; // Sortir de la boucle de sélection de difficulté
                     } else if (level == 3) {
                         difficulty = "expert";
-                        break;
+                        break; // Sortir de la boucle de sélection de difficulté
                     } else {
                         System.out.println("Entrée invalide. Veuillez entrer 1, 2 ou 3.");
                     }
                 }
-                if (choix == 1) {
-                    playerStarts = true;
-                    break;
-                } else if (choix == 0) {
-                    playerStarts = false;
-                    break;
-                } else {
-                    System.out.println("Entrée invalide. Veuillez entrer 1 ou 0.");
-                }
-                game.setDifficulty(difficulty); // Configurer la difficulté dans le jeu
+
+                // Configurer la difficulté et lancer le jeu contre l'ordinateur
+                game.setDifficulty(difficulty);
                 game.playGame(startingPosition, playerStarts);
+                break; // Quitter la boucle principale après avoir démarré le jeu
+            } else {
+                System.out.println("Entrée invalide. Veuillez entrer 1 ou 0.");
             }
         }
 
+        scanner.close(); // Libérer les ressources du scanner après usage
     }
 
 }
